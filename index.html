@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html lang="es">
+	<head>
+		<title>Herramientas - BAMX</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<link rel="icon" type="image/png" href="logoico.png"> 
+        <style>
+            /* SOLUCIÓN DEFINITIVA PARA EL FONDO */
+            #bg {
+                background-image: url("fondo2.png") !important;
+                background-size: cover !important;
+                background-position: center !important;
+                background-attachment: fixed !important;
+                z-index: -1 !important;
+            }
+
+            /* Eliminamos las capas de la plantilla que bloquean la imagen */
+            #bg:before, #bg:after {
+                background-image: none !important;
+                background: rgba(0, 0, 0, 0.4) !important; /* Capa oscura para leer texto */
+                content: '' !important;
+                display: block !important;
+            }
+
+            /* Barra Superior */
+            #top-nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100px;
+                background: rgba(0, 0, 0, 0.95);
+                border-bottom: 2px solid #ff0000;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 2rem;
+                z-index: 10001;
+            }
+
+            .nav-logo {
+                height: 70px;
+                width: auto;
+                object-fit: contain;
+            }
+
+            /* Contenedor de Herramientas */
+            .tools-container {
+                display: flex;
+                justify-content: center;
+                gap: 2rem;
+                width: 100%;
+                max-width: 900px;
+                margin: 2rem auto;
+                flex-wrap: wrap;
+            }
+
+            .tool-card {
+                flex: 1;
+                min-width: 300px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid #ff0000;
+                padding: 2.5rem;
+                text-align: center;
+                transition: all 0.3s ease;
+                text-decoration: none !important;
+            }
+
+            .tool-card:hover {
+                transform: translateY(-10px);
+                background: rgba(255, 0, 0, 0.1);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            }
+
+            .tool-card .icon {
+                font-size: 3.5rem;
+                color: #ff0000;
+                margin-bottom: 1.5rem;
+                display: block;
+            }
+
+            .tool-card h3 {
+                margin-bottom: 1rem;
+                letter-spacing: 2px;
+                color: #ffffff;
+            }
+
+            #wrapper {
+                padding-top: 150px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .back-link {
+                margin-top: 3rem;
+                color: #ffffff;
+                text-decoration: none;
+                font-size: 0.8rem;
+                letter-spacing: 2px;
+                border-bottom: 1px solid #ff0000;
+            }
+        </style>
+	</head>
+	<body class="is-preload">
+
+        <nav id="top-nav">
+            <img src="LOGOS/3.png" alt="BAMX Puebla" class="nav-logo" />
+            <div style="color: white; font-weight: bold; letter-spacing: 3px; font-size: 1.2rem;">UTILIDADES</div>
+            <img src="LOGOS/5.png" alt="BAMX Tlaxcala" class="nav-logo" />
+        </nav>
+
+		<div id="bg"></div>
+
+		<div id="wrapper">
+				<header id="header" style="border:none; background:none;">
+						<div class="content">
+							<div class="inner">
+								<h1>RECURSOS DIGITALES</h1>
+                                <p>Herramientas de gestión y diagnóstico para colaboradores de BAMX</p>
+							</div>
+						</div>
+				</header> 
+
+				<div class="tools-container">
+                    <a href="https://comunicacionbamx.github.io/GENERATUQR/" target="_blank" class="tool-card">
+                        <span class="icon fa-qrcode"></span>
+                        <h3>Genera tu propio QR</h3>
+                        <p>Convierte tus enlaces y contactos en códigos QR listos para imprimir o compartir.</p>
+                    </a>
+
+                    <a href="https://comunicacionbamx.github.io/Analizador/" target="_blank" class="tool-card">
+                        <span class="icon fa-laptop"></span>
+                        <h3>Analizador de mi Equipo</h3>
+                        <p>Obtén un reporte técnico detallado de los componentes y sistema de tu estación de trabajo.</p>
+                    </a>
+				</div>
+
+                <a href="index.html" class="back-link">← VOLVER AL INICIO</a>
+
+                <footer id="footer">
+						<p class="copyright">&copy; BAMX. <a href="https://www.bapuebla.org.mx/" target="_blank">PUEBLA & TLAXCALA</a>.</p>
+				</footer>	
+		</div> 
+
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+	</body>
+</html>
