@@ -91,39 +91,50 @@
                 chat.style.display = (chat.style.display === 'none' || chat.style.display === '') ? 'flex' : 'none';
             }
 
-            async function sendChatMessage() {
-                const input = document.getElementById('chat-input');
-                const msgContainer = document.getElementById('chat-messages');
-                if (!input.value) return;
+           async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const msgContainer = document.getElementById('chat-messages');
+    if (!input.value) return;
 
-                const userText = input.value;
-                msgContainer.innerHTML += `<div style="background: #ff0000; color: white; padding: 10px; border-radius: 8px; align-self: flex-end;">${userText}</div>`;
-                input.value = '';
-                msgContainer.scrollTop = msgContainer.scrollHeight;
+    // Token y configuración
+    const HF_TOKEN = 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; 
+    const MODEL_URL = "https://api-inference.huggingface.co/models/MistralAI/Mistral-7B-Instruct-v0.2";
 
-                const loadingId = 'loading-' + Date.now();
-                msgContainer.innerHTML += `<div id="${loadingId}" style="font-style: italic; font-size: 0.8rem; color: #8899a6;">Conectando con soporte...</div>`;
+    const userText = input.value;
+    msgContainer.innerHTML += `<div style="background: #ff0000; color: white; padding: 10px; border-radius: 8px; align-self: flex-end;">${userText}</div>`;
+    input.value = '';
+    msgContainer.scrollTop = msgContainer.scrollHeight;
 
-                try {
-                    // Este FETCH solo funcionará si el sitio está en HTTPS (GitHub Pages)
-                    const response = await fetch("https://api-inference.huggingface.co/models/MistralAI/Mistral-7B-Instruct-v0.2", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            inputs: `[INST] Eres el soporte técnico de BAMX. Responde breve y solo sobre tecnología. Pregunta: ${userText} [/INST]`,
-                            options: { wait_for_model: true }
-                        })
-                    });
-                    const data = await response.json();
-                    document.getElementById(loadingId).remove();
-                    let reply = data[0]?.generated_text || "Servicio ocupado.";
-                    if (reply.includes('[/INST]')) reply = reply.split('[/INST]').pop().trim();
-                    msgContainer.innerHTML += `<div style="background: #334155; padding: 10px; border-radius: 8px; align-self: flex-start; border-left: 3px solid #ff0000;">${reply}</div>`;
-                } catch (e) {
-                    document.getElementById(loadingId).innerText = "Error: Sube el archivo a GitHub para activar la IA.";
-                }
-                msgContainer.scrollTop = msgContainer.scrollHeight;
-            }
+    const loadingId = 'loading-' + Date.now();
+    msgContainer.innerHTML += `<div id="${loadingId}" style="font-style: italic; font-size: 0.8rem; color: #8899a6;">La IA está despertando... espera 10s...</div>`;
+
+    try {
+        const response = await fetch(MODEL_URL, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${HF_TOKEN}` // Esto es lo que falta para que responda
+            },
+            body: JSON.stringify({
+                inputs: `[INST] Eres el soporte técnico de BAMX. Responde breve y solo sobre tecnología. Pregunta: ${userText} [/INST]`,
+                options: { wait_for_model: true } // Obliga al servidor a no dar error si la IA está cargando
+            })
+        });
+
+        const data = await response.json();
+        const loadingElement = document.getElementById(loadingId);
+        if (loadingElement) loadingElement.remove();
+
+        let reply = data[0]?.generated_text || "El servidor está ocupado, intenta en un momento.";
+        if (reply.includes('[/INST]')) reply = reply.split('[/INST]').pop().trim();
+
+        msgContainer.innerHTML += `<div style="background: #334155; padding: 10px; border-radius: 8px; align-self: flex-start; border-left: 3px solid #ff0000;">${reply}</div>`;
+    } catch (e) {
+        document.getElementById(loadingId).innerText = "Error crítico de conexión.";
+    }
+    msgContainer.scrollTop = msgContainer.scrollHeight;
+}
         </script>
 	</body>
 </html>
+
