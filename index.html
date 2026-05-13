@@ -1,746 +1,1111 @@
-
 <!DOCTYPE HTML>
 <html lang="es">
-	<head>
-		<title>Herramientas - BAMX</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-		<link rel="icon" type="image/png" href="logoico.png"> 
-        <!-- Librerías para el Escáner -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-        <style>
-            /* Tu estilo original se mantiene intacto */
-            #bg { background-image: url("fondo2.png") !important; background-size: cover !important; background-position: center !important; background-attachment: fixed !important; z-index: -1 !important; }
-            #bg:before, #bg:after { background-image: none !important; background: rgba(0, 0, 0, 0.4) !important; content: '' !important; display: block !important; }
-            #top-nav { position: fixed; top: 0; left: 0; width: 100%; height: 100px; background: rgba(0, 0, 0, 0.95); border-bottom: 2px solid #ff0000; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; z-index: 10001; }
-            .nav-logo { height: 70px; width: auto; object-fit: contain; }
-            .tools-container { display: flex; justify-content: center; gap: 2rem; width: 100%; max-width: 1200px; margin: 2rem auto; flex-wrap: wrap; }
-            .tool-card { flex: 1; min-width: 300px; background: rgba(255, 255, 255, 0.05); border: 1px solid #ff0000; padding: 2.5rem; text-align: center; transition: all 0.3s ease; text-decoration: none !important; cursor: pointer; }
-            .tool-card:hover { transform: translateY(-10px); background: rgba(255, 0, 0, 0.1); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-            .tool-card .icon { font-size: 3.5rem; color: #ff0000; margin-bottom: 1.5rem; display: block; }
-            .tool-card h3 { margin-bottom: 1rem; letter-spacing: 2px; color: #ffffff; }
-            #wrapper { padding-top: 150px; display: flex; flex-direction: column; align-items: center; transition: all 0.5s ease; }
-            .back-link { margin-top: 3rem; color: #ffffff; text-decoration: none; font-size: 0.8rem; letter-spacing: 2px; border-bottom: 1px solid #ff0000; }
+<head>
+    <title>Herramientas - BAMX</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript>
+        <link rel="stylesheet" href="assets/css/noscript.css" />
+    </noscript>
+    <link rel="icon" type="image/png" href="logoico.png">
+    <!-- Librerías para el Escáner -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-            /* Estilos del Escáner Integrado - Premium Version */
+    <style>
+        /* Tu estilo original se mantiene intacto */
+        #bg {
+            background-image: url("fondo2.png") !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            z-index: -1 !important;
+        }
+
+        #bg:before,
+        #bg:after {
+            background-image: none !important;
+            background: rgba(0, 0, 0, 0.4) !important;
+            content: '' !important;
+            display: block !important;
+        }
+
+        #top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.95);
+            border-bottom: 2px solid #ff0000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            z-index: 10001;
+        }
+
+        .nav-logo {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .tools-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            flex-wrap: wrap;
+        }
+
+        .tool-card {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #ff0000;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-decoration: none !important;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .tool-card .icon {
+            font-size: 3.5rem;
+            color: #ff0000;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .tool-card h3 {
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        #wrapper {
+            padding-top: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.5s ease;
+        }
+
+        .back-link {
+            margin-top: 3rem;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            border-bottom: 1px solid #ff0000;
+        }
+
+        /* Estilos del Escáner Integrado - Premium Version */
+        #scanner-section {
+            display: none;
+            width: 100%;
+            max-width: 850px;
+            background: rgba(15, 15, 15, 0.98);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 30px;
+            padding: 2.5rem;
+            margin-top: 2rem;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 0, 0, 0.05);
+            backdrop-filter: blur(20px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .camera-viewport {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .scan-guide {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            height: 85%;
+            pointer-events: none;
+        }
+
+        .corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ff0000;
+            border-radius: 4px;
+            filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
+        }
+
+        .top-left {
+            top: 0;
+            left: 0;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .top-right {
+            top: 0;
+            right: 0;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .bottom-left {
+            bottom: 0;
+            left: 0;
+            border-right: none;
+            border-top: none;
+        }
+
+        .bottom-right {
+            bottom: 0;
+            right: 0;
+            border-left: none;
+            border-top: none;
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #ff0000, transparent);
+            box-shadow: 0 0 20px #ff0000;
+            animation: scanMove 4s infinite ease-in-out;
+        }
+
+        .scanner-controls {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            align-items: stretch;
+        }
+
+        .btn-red {
+            flex: 2;
+            background: linear-gradient(135deg, #ff0000, #b30000);
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.2);
+        }
+
+        .btn-red:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(255, 0, 0, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .btn-red:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            width: 70px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 0, 0, 0.4);
+            color: #ff0000;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: #ff0000;
+        }
+
+        .btn-save {
+            flex: 1.5;
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 15px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 1;
+        }
+
+        .btn-save:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .btn-save:not(:disabled):hover {
+            background: #ff0000;
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.2);
+        }
+
+        .close-scanner-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .close-scanner-btn:hover {
+            background: #ff0000;
+            border-color: #ff0000;
+            transform: rotate(90deg);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+        }
+
+        .page-thumb {
+            position: relative;
+            aspect-ratio: 1/1.4;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .page-thumb:hover {
+            transform: scale(1.05);
+        }
+
+        .page-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .delete-page {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 28px;
+            height: 28px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .ocr-small-btn {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 9px;
+            font-weight: 600;
+            padding: 6px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(5px);
+        }
+
+        .ocr-small-btn:hover {
+            background: #ff0000;
+            border-color: #ff0000;
+        }
+
+        /* Mobile Responsiveness for Scanner */
+        @media (max-width: 600px) {
             #scanner-section {
-                display: none;
-                width: 100%;
-                max-width: 850px;
-                background: rgba(15, 15, 15, 0.98);
-                border: 1px solid rgba(255, 0, 0, 0.3);
-                border-radius: 30px;
-                padding: 2.5rem;
-                margin-top: 2rem;
-                animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-                z-index: 100;
-                box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,0,0,0.05);
-                backdrop-filter: blur(20px);
+                padding: 1.2rem;
+                border-radius: 20px;
+                width: 95%;
+                margin-top: 1rem;
             }
 
-            @keyframes fadeIn { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-
-            .camera-viewport { 
-                position: relative; 
-                width: 100%; 
-                aspect-ratio: 4/3; 
-                background: #000; 
-                border-radius: 20px; 
-                overflow: hidden; 
-                margin-bottom: 2rem;
-                box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 20px 40px rgba(0,0,0,0.5);
-            }
-            #video { width: 100%; height: 100%; object-fit: cover; }
-            
-            .scan-guide { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; height: 85%; pointer-events: none; }
-            .corner { position: absolute; width: 40px; height: 40px; border: 4px solid #ff0000; border-radius: 4px; filter: drop-shadow(0 0 5px rgba(255,0,0,0.5)); }
-            .top-left { top: 0; left: 0; border-right: none; border-bottom: none; }
-            .top-right { top: 0; right: 0; border-left: none; border-bottom: none; }
-            .bottom-left { bottom: 0; left: 0; border-right: none; border-top: none; }
-            .bottom-right { bottom: 0; right: 0; border-left: none; border-top: none; }
-            .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(to right, transparent, #ff0000, transparent); box-shadow: 0 0 20px #ff0000; animation: scanMove 4s infinite ease-in-out; }
-            
-            .scanner-controls { display: flex; gap: 1.5rem; margin-bottom: 2rem; align-items: stretch; }
-            
-            .btn-red { 
-                flex: 2; 
-                background: linear-gradient(135deg, #ff0000, #b30000); 
-                color: white; 
-                border: none; 
-                padding: 1.2rem; 
-                border-radius: 15px; 
-                font-weight: 700; 
-                font-size: 1rem;
-                letter-spacing: 2px;
-                cursor: pointer; 
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                display: flex;
-                align-items: center;
-                justify-content: center;
+            .scanner-controls {
+                flex-wrap: wrap;
                 gap: 0.8rem;
-                box-shadow: 0 10px 20px rgba(255, 0, 0, 0.2);
             }
-            .btn-red:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(255, 0, 0, 0.3); filter: brightness(1.1); }
-            .btn-red:active { transform: translateY(-1px); }
 
-            .btn-outline { 
-                width: 70px;
-                background: rgba(255, 255, 255, 0.05); 
-                border: 1px solid rgba(255, 0, 0, 0.4); 
-                color: #ff0000; 
-                border-radius: 15px; 
-                cursor: pointer;
-                transition: all 0.3s;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.4rem;
+            .btn-red {
+                flex: 1 1 70%;
+                padding: 1rem;
+                font-size: 0.9rem;
             }
-            .btn-outline:hover { background: rgba(255, 0, 0, 0.1); border-color: #ff0000; }
+
+            .btn-outline {
+                flex: 1 1 20%;
+                width: auto;
+                height: 55px;
+            }
 
             .btn-save {
-                flex: 1.5;
-                background: #ffffff;
-                color: #000000;
-                border: none;
-                padding: 1.2rem;
-                border-radius: 15px;
-                font-weight: 800;
-                font-size: 0.9rem;
-                letter-spacing: 1px;
-                cursor: pointer;
-                transition: all 0.3s;
-                opacity: 1;
-            }
-            .btn-save:disabled { background: #333; color: #666; cursor: not-allowed; opacity: 0.5; }
-            .btn-save:not(:disabled):hover { background: #ff0000; color: #fff; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255,0,0,0.2); }
-
-            .close-scanner-btn {
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                color: #fff;
-                width: 40px;
-                height: 40px;
-                border-radius: 10px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: all 0.3s;
-                font-size: 1.2rem;
-            }
-            .close-scanner-btn:hover { background: #ff0000; border-color: #ff0000; transform: rotate(90deg); }
-
-            .gallery-grid { 
-                display: grid; 
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
-                gap: 1.5rem; 
-                margin-top: 1rem;
+                flex: 1 1 100%;
                 padding: 1rem;
-                background: rgba(0,0,0,0.2);
-                border-radius: 20px;
-            }
-            .page-thumb { 
-                position: relative; 
-                aspect-ratio: 1/1.4; 
-                background: #fff; 
-                border-radius: 12px; 
-                overflow: hidden; 
-                box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-                transition: transform 0.3s;
-            }
-            .page-thumb:hover { transform: scale(1.05); }
-            .page-thumb img { width: 100%; height: 100%; object-fit: cover; }
-            
-            .delete-page { 
-                position: absolute; 
-                top: 8px; 
-                right: 8px; 
-                background: #ff0000; 
-                color: white; 
-                border: none; 
-                border-radius: 8px; 
-                width: 28px; 
-                height: 28px; 
-                font-size: 14px; 
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 4px 10px rgba(255,0,0,0.3);
-                z-index: 10;
-            }
-            .ocr-small-btn { 
-                position: absolute; 
-                bottom: 8px; 
-                left: 8px; 
-                right: 8px; 
-                background: rgba(0,0,0,0.85); 
-                color: #fff; 
-                border: 1px solid rgba(255,255,255,0.2); 
-                font-size: 9px; 
-                font-weight: 600;
-                padding: 6px; 
-                border-radius: 8px; 
-                cursor: pointer; 
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                backdrop-filter: blur(5px);
-            }
-            .ocr-small-btn:hover { background: #ff0000; border-color: #ff0000; }
-
-            /* Mobile Responsiveness for Scanner */
-            @media (max-width: 600px) {
-                #scanner-section {
-                    padding: 1.2rem;
-                    border-radius: 20px;
-                    width: 95%;
-                    margin-top: 1rem;
-                }
-                
-                .scanner-controls {
-                    flex-wrap: wrap;
-                    gap: 0.8rem;
-                }
-                
-                .btn-red {
-                    flex: 1 1 70%;
-                    padding: 1rem;
-                    font-size: 0.9rem;
-                }
-                
-                .btn-outline {
-                    flex: 1 1 20%;
-                    width: auto;
-                    height: 55px;
-                }
-                
-                .btn-save {
-                    flex: 1 1 100%;
-                    padding: 1rem;
-                }
-                
-                .camera-viewport {
-                    aspect-ratio: 3/4;
-                }
-                
-                .gallery-grid {
-                    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-                    gap: 1rem;
-                    padding: 0.8rem;
-                }
             }
 
-            /* Modal OCR */
-            .ocr-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 20000; align-items: center; justify-content: center; padding: 20px; }
-            .ocr-content { background: #1a1a1a; border: 1px solid #ff0000; border-radius: 12px; width: 100%; max-width: 600px; padding: 20px; }
-            #ocr-text-result { width: 100%; height: 300px; background: #000; color: #fff; border: 1px solid #333; padding: 15px; margin: 15px 0; border-radius: 8px; font-family: monospace; resize: none; }
+            .camera-viewport {
+                aspect-ratio: 3/4;
+            }
 
-            /* Modal Firma */
-            .signature-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 21000; align-items: center; justify-content: center; padding: 20px; }
-            .signature-content { background: #fff; border-radius: 15px; width: 100%; max-width: 500px; padding: 20px; text-align: center; }
-            #signature-pad { border: 2px dashed #ccc; background: #f9f9f9; border-radius: 10px; cursor: crosshair; touch-action: none; width: 100%; aspect-ratio: 2/1; }
-            .sig-controls { display: flex; gap: 10px; margin-top: 15px; }
-            .btn-black { flex: 1; background: #000; color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 1rem;
+                padding: 0.8rem;
+            }
+        }
 
-            /* Watermark & Categorization Styles */
-            .advanced-options { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
-            .opt-group { flex: 1; min-width: 150px; }
-            .opt-group label { display: block; font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-            .opt-group select, .opt-group input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 8px; font-size: 0.85rem; }
-            .checkbox-label { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 0.85rem; cursor: pointer; }
-            .checkbox-label input { width: 18px; height: 18px; accent-color: #ff0000; }
+        /* Modal OCR */
+        .ocr-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 20000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-            /* Estilos de la burbuja de chat */
-            #chat-bubble { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 10002; transition: transform 0.3s; }
-            #chat-window-container { display: none; position: fixed; bottom: 90px; right: 20px; width: 350px; height: 450px; background: #1c2331; border: 1px solid #ff0000; border-radius: 12px; flex-direction: column; z-index: 10002; box-shadow: 0 10px 30px rgba(0,0,0,0.6); overflow: hidden; }
-        </style>
-	</head>
-	<body class="is-preload">
-        <nav id="top-nav">
-            <img src="LOGOS/3.png" alt="BAMX Puebla" class="nav-logo" />
-            <div style="color: white; font-weight: bold; letter-spacing: 3px; font-size: 1.2rem;">UTILIDADES</div>
-            <img src="LOGOS/5.png" alt="BAMX Tlaxcala" class="nav-logo" />
-        </nav>
+        .ocr-content {
+            background: #1a1a1a;
+            border: 1px solid #ff0000;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+        }
 
-		<div id="bg"></div>
+        #ocr-text-result {
+            width: 100%;
+            height: 300px;
+            background: #000;
+            color: #fff;
+            border: 1px solid #333;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-family: monospace;
+            resize: none;
+        }
 
-		<div id="wrapper">
-				<header id="header" style="border:none; background:none;">
-						<div class="content">
-							<div class="inner">
-								<h1>RECURSOS DIGITALES</h1>
-                                <p>Herramientas de gestión y diagnóstico para colaboradores de BAMX</p>
-							</div>
-						</div>
-				</header> 
+        /* Modal Firma */
+        .signature-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 21000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-				<div id="main-tools" class="tools-container">
-                    <a href="https://comunicacionbamx.github.io/GENERATUQR/" target="_blank" class="tool-card">
-                        <span class="icon fa-qrcode"></span>
-                        <h3>Genera tu propio QR</h3>
-                        <p>Convierte tus enlaces y contactos en códigos QR listos para imprimir o compartir.</p>
-                    </a>
+        .signature-content {
+            background: #fff;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            text-align: center;
+        }
 
-                    <div onclick="openScanner()" class="tool-card">
-                        <span class="icon fa-file-pdf-o"></span>
-                        <h3>Escáner PDF & OCR</h3>
-                        <p>Digitaliza documentos con la cámara, convierte a PDF y extrae texto con IA.</p>
-                    </div>
-				</div>
+        #signature-pad {
+            border: 2px dashed #ccc;
+            background: #f9f9f9;
+            border-radius: 10px;
+            cursor: crosshair;
+            touch-action: none;
+            width: 100%;
+            aspect-ratio: 2/1;
+        }
 
-                <!-- Sección del Escáner (Inicialmente Oculta) -->
-                <div id="scanner-section">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h2 style="color: #fff; margin: 0; font-size: 1.4rem; letter-spacing: 4px; font-weight: 700;">ESCÁNER <span style="color: #ff0000;">PRO</span></h2>
-                        <button onclick="closeScanner()" class="close-scanner-btn">&times;</button>
-                    </div>
-                    
-                    <div id="mode-selector" style="display: flex; background: rgba(255, 255, 255, 0.05); padding: 5px; border-radius: 12px; margin-bottom: 1rem; gap: 5px;">
-                        <button id="mode-bw" class="mode-btn active" onclick="setScanMode('bw')" style="flex: 1; border: none; background: #ff0000; color: white; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s;">📄 B/N</button>
-                        <button id="mode-color" class="mode-btn" onclick="setScanMode('color')" style="flex: 1; border: none; background: transparent; color: #888; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s;">🎨 COLOR</button>
-                    </div>
+        .sig-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
 
-                    <div class="advanced-options">
-                        <div class="opt-group">
-                            <label>Categoría (Opción 4)</label>
-                            <select id="doc-category">
-                                <option value="RECIBO">Recibo de Alimento</option>
-                                <option value="INVENTARIO">Corte de Inventario</option>
-                                <option value="MANTENIMIENTO">Reporte Mantenimiento</option>
-                                <option value="OTRO">Otro Documento</option>
-                            </select>
-                        </div>
-                        <div class="opt-group" style="display: flex; align-items: center; padding-top: 15px;">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="watermark-toggle" checked> Marca de Agua (Opción 3)
-                            </label>
-                        </div>
-                        <div class="opt-group">
-                            <button onclick="openSignatureModal()" class="ocr-small-btn" style="position: static; width: 100%; background: rgba(255,255,255,0.1); border: 1px solid #ff0000; height: 35px;">✍️ FIRMA DIGITAL (Opción 1)</button>
-                        </div>
-                    </div>
+        .btn-black {
+            flex: 1;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
 
-                    <div class="camera-viewport">
-                        <video id="video" autoplay playsinline></video>
-                        <div class="scan-guide">
-                            <div class="corner top-left"></div>
-                            <div class="corner top-right"></div>
-                            <div class="corner bottom-left"></div>
-                            <div class="corner bottom-right"></div>
-                            <div class="scan-line"></div>
-                        </div>
-                    </div>
+        /* Watermark & Categorization Styles */
+        .advanced-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-                    <div class="scanner-controls">
-                        <button id="capture-btn" class="btn-red">📸 CAPTURAR</button>
-                        <button id="switch-camera-btn" class="btn-outline">🔄</button>
-                        <button id="clear-all-btn" class="btn-outline" style="font-size: 1rem; width: 60px;">🗑️</button>
-                        <button id="generate-pdf-btn" class="btn-save" disabled>GUARDAR PDF</button>
-                    </div>
+        .opt-group {
+            flex: 1;
+            min-width: 150px;
+        }
 
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding: 0 10px;">
-                        <h4 style="color: #888; margin: 0; font-size: 0.8rem;">VISTA PREVIA</h4>
-                        <button id="bulk-ocr-btn" onclick="processBulkOCR()" class="ocr-small-btn" style="position: static; padding: 4px 10px; border-color: #ff0000; display: none;">🔍 OCR DE LOTE (Opción 5)</button>
-                    </div>
-                    <div id="gallery" class="gallery-grid">
-                        <!-- Capturas aparecerán aquí -->
-                    </div>
+        .opt-group label {
+            display: block;
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .opt-group select,
+        .opt-group input {
+            width: 100%;
+            background: #000;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .checkbox-label input {
+            width: 18px;
+            height: 18px;
+            accent-color: #ff0000;
+        }
+
+        /* Estilos de la burbuja de chat */
+        #chat-bubble {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #ff0000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            z-index: 10002;
+            transition: transform 0.3s;
+        }
+
+        #chat-window-container {
+            display: none;
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 450px;
+            background: #1c2331;
+            border: 1px solid #ff0000;
+            border-radius: 12px;
+            flex-direction: column;
+            z-index: 10002;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="is-preload">
+    <nav id="top-nav">
+        <img src="LOGOS/3.png" alt="BAMX Puebla" class="nav-logo" />
+        <div style="color: white; font-weight: bold; letter-spacing: 3px; font-size: 1.2rem;">UTILIDADES</div>
+        <img src="LOGOS/5.png" alt="BAMX Tlaxcala" class="nav-logo" />
+    </nav>
+
+    <div id="bg"></div>
+
+    <div id="wrapper">
+        <header id="header" style="border:none; background:none;">
+            <div class="content">
+                <div class="inner">
+                    <h1>RECURSOS DIGITALES</h1>
+                    <p>Herramientas de gestión y diagnóstico para colaboradores de BAMX</p>
                 </div>
+            </div>
+        </header>
 
-                <a href="index.html" class="back-link">← VOLVER AL INICIO</a>
+        <div id="main-tools" class="tools-container">
+            <a href="https://comunicacionbamx.github.io/GENERATUQR/" target="_blank" class="tool-card">
+                <span class="icon fa-qrcode"></span>
+                <h3>Genera tu propio QR</h3>
+                <p>Convierte tus enlaces y contactos en códigos QR listos para imprimir o compartir.</p>
+            </a>
 
-                <footer id="footer">
-						<p class="copyright">&copy; BAMX. <a href="https://www.bapuebla.org.mx/" target="_blank">PUEBLA & TLAXCALA</a>.</p>
-				</footer>	
-		</div> 
-
-        <!-- Modal OCR -->
-        <div id="ocr-modal" class="ocr-modal">
-            <div class="ocr-content">
-                <h3 style="color: #ff0000;">Texto Extraído por IA</h3>
-                <div id="ocr-status" style="font-size: 0.8rem; color: #888;">Procesando...</div>
-                <textarea id="ocr-text-result" readonly></textarea>
-                <div style="display: flex; gap: 1rem;">
-                    <button id="copy-ocr-btn" class="btn-red">Copiar Texto</button>
-                    <button onclick="document.getElementById('ocr-modal').style.display='none'" class="btn-outline">Cerrar</button>
-                </div>
+            <div onclick="openScanner()" class="tool-card">
+                <span class="icon fa-file-pdf-o"></span>
+                <h3>Escáner PDF & OCR</h3>
+                <p>Digitaliza documentos con la cámara, convierte a PDF y extrae texto con IA.</p>
             </div>
         </div>
 
-        <!-- Modal Firma (Opción 1) -->
-        <div id="signature-modal" class="signature-modal">
-            <div class="signature-content">
-                <h3 style="color: #000; margin-bottom: 10px;">✍️ Firma Digital</h3>
-                <p style="color: #666; font-size: 0.8rem; margin-bottom: 15px;">Firma con tu dedo o mouse dentro del recuadro</p>
-                <canvas id="signature-pad"></canvas>
-                <div class="sig-controls">
-                    <button onclick="clearSignature()" class="btn-outline" style="border-color: #ccc; color: #666; flex: 1;">Limpiar</button>
-                    <button onclick="saveSignature()" class="btn-black" style="flex: 2;">Guardar Firma</button>
-                    <button onclick="closeSignatureModal()" class="btn-outline" style="flex: 1;">×</button>
+        <!-- Sección del Escáner (Inicialmente Oculta) -->
+        <div id="scanner-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="color: #fff; margin: 0; font-size: 1.4rem; letter-spacing: 4px; font-weight: 700;">ESCÁNER
+                    <span style="color: #ff0000;">PRO</span></h2>
+                <button onclick="closeScanner()" class="close-scanner-btn">&times;</button>
+            </div>
+
+            <div id="mode-selector"
+                style="display: flex; background: rgba(255, 255, 255, 0.05); padding: 5px; border-radius: 12px; margin-bottom: 1rem; gap: 5px;">
+                <button id="mode-bw" class="mode-btn active" onclick="setScanMode('bw')"
+                    style="flex: 1; border: none; background: #ff0000; color: white; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s;">📄
+                    B/N</button>
+                <button id="mode-color" class="mode-btn" onclick="setScanMode('color')"
+                    style="flex: 1; border: none; background: transparent; color: #888; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s;">🎨
+                    COLOR</button>
+            </div>
+
+            <div class="advanced-options">
+                <div class="opt-group">
+                    <label>Categoría (Opción 4)</label>
+                    <select id="doc-category">
+                        <option value="RECIBO">Recibo de Alimento</option>
+                        <option value="INVENTARIO">Corte de Inventario</option>
+                        <option value="MANTENIMIENTO">Reporte Mantenimiento</option>
+                        <option value="OTRO">Otro Documento</option>
+                    </select>
+                </div>
+                <div class="opt-group" style="display: flex; align-items: center; padding-top: 15px;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="watermark-toggle" checked> Marca de Agua (Opción 3)
+                    </label>
+                </div>
+                <div class="opt-group">
+                    <button onclick="openSignatureModal()" class="ocr-small-btn"
+                        style="position: static; width: 100%; background: rgba(255,255,255,0.1); border: 1px solid #ff0000; height: 35px;">✍️
+                        FIRMA DIGITAL (Opción 1)</button>
                 </div>
             </div>
+
+            <div class="camera-viewport">
+                <video id="video" autoplay playsinline></video>
+                <div class="scan-guide">
+                    <div class="corner top-left"></div>
+                    <div class="corner top-right"></div>
+                    <div class="corner bottom-left"></div>
+                    <div class="corner bottom-right"></div>
+                    <div class="scan-line"></div>
+                </div>
+            </div>
+
+            <div class="scanner-controls">
+                <button id="capture-btn" class="btn-red">📸 CAPTURAR</button>
+                <button id="switch-camera-btn" class="btn-outline">🔄</button>
+                <button id="clear-all-btn" class="btn-outline" style="font-size: 1rem; width: 60px;">🗑️</button>
+                <button id="generate-pdf-btn" class="btn-save" disabled>GUARDAR PDF</button>
+            </div>
+
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding: 0 10px;">
+                <h4 style="color: #888; margin: 0; font-size: 0.8rem;">VISTA PREVIA</h4>
+                <button id="bulk-ocr-btn" onclick="processBulkOCR()" class="ocr-small-btn"
+                    style="position: static; padding: 4px 10px; border-color: #ff0000; display: none;">🔍 OCR DE LOTE
+                    (Opción 5)</button>
+            </div>
+            <div id="gallery" class="gallery-grid">
+                <!-- Capturas aparecerán aquí -->
+            </div>
         </div>
 
-        <div id="chat-bubble" onclick="toggleChat()"> <span style="color: white; font-size: 30px;">💬</span> </div>
-        <div id="chat-window-container">
-            <div style="background: #000; padding: 15px; color: white; font-weight: bold; border-bottom: 1px solid #ff0000; display: flex; justify-content: space-between;">
-                <span>🤖 Soporte IA BAMX</span> <span onclick="toggleChat()" style="cursor:pointer;">✖</span>
-            </div>
-            <div id="chat-messages" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: rgba(0,0,0,0.2); color: #cfd8dc; font-size: 0.9rem;">
-                <div style="background: #334155; padding: 10px; border-radius: 8px; align-self: flex-start; border-left: 3px solid #ff0000;"> PROXIMAMENTE</div>
-            </div>
-            <div style="padding: 10px; background: #000; display: flex; gap: 5px;">
-                <input type="text" id="chat-input" placeholder="Escribe aquí..." style="flex: 1; background: #1c2331; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px;">
-                <button onclick="sendChatMessage()" style="background: #ff0000; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">></button>
+        <a href="index.html" class="back-link">← VOLVER AL INICIO</a>
+
+        <footer id="footer">
+            <p class="copyright">&copy; BAMX. <a href="https://www.bapuebla.org.mx/" target="_blank">PUEBLA &
+                    TLAXCALA</a>.</p>
+        </footer>
+    </div>
+
+    <!-- Modal OCR -->
+    <div id="ocr-modal" class="ocr-modal">
+        <div class="ocr-content">
+            <h3 style="color: #ff0000;">Texto Extraído por IA</h3>
+            <div id="ocr-status" style="font-size: 0.8rem; color: #888;">Procesando...</div>
+            <textarea id="ocr-text-result" readonly></textarea>
+            <div style="display: flex; gap: 1rem;">
+                <button id="copy-ocr-btn" class="btn-red">Copiar Texto</button>
+                <button onclick="document.getElementById('ocr-modal').style.display='none'"
+                    class="btn-outline">Cerrar</button>
             </div>
         </div>
+    </div>
 
-        <!-- Canvas oculto para procesamiento -->
-        <canvas id="scanner-canvas" style="display:none;"></canvas>
+    <!-- Modal Firma (Opción 1) -->
+    <div id="signature-modal" class="signature-modal">
+        <div class="signature-content">
+            <h3 style="color: #000; margin-bottom: 10px;">✍️ Firma Digital</h3>
+            <p style="color: #666; font-size: 0.8rem; margin-bottom: 15px;">Firma con tu dedo o mouse dentro del
+                recuadro</p>
+            <canvas id="signature-pad"></canvas>
+            <div class="sig-controls">
+                <button onclick="clearSignature()" class="btn-outline"
+                    style="border-color: #ccc; color: #666; flex: 1;">Limpiar</button>
+                <button onclick="saveSignature()" class="btn-black" style="flex: 2;">Guardar Firma</button>
+                <button onclick="closeSignatureModal()" class="btn-outline" style="flex: 1;">×</button>
+            </div>
+        </div>
+    </div>
 
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
+    <div id="chat-bubble" onclick="toggleChat()"> <span style="color: white; font-size: 30px;">💬</span> </div>
+    <div id="chat-window-container">
+        <div
+            style="background: #000; padding: 15px; color: white; font-weight: bold; border-bottom: 1px solid #ff0000; display: flex; justify-content: space-between;">
+            <span>🤖 Soporte IA BAMX</span> <span onclick="toggleChat()" style="cursor:pointer;">✖</span>
+        </div>
+        <div id="chat-messages"
+            style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: rgba(0,0,0,0.2); color: #cfd8dc; font-size: 0.9rem;">
+            <div
+                style="background: #334155; padding: 10px; border-radius: 8px; align-self: flex-start; border-left: 3px solid #ff0000;">
+                PROXIMAMENTE</div>
+        </div>
+        <div style="padding: 10px; background: #000; display: flex; gap: 5px;">
+            <input type="text" id="chat-input" placeholder="Escribe aquí..."
+                style="flex: 1; background: #1c2331; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px;">
+            <button onclick="sendChatMessage()"
+                style="background: #ff0000; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">></button>
+        </div>
+    </div>
 
-        <script>
-            // --- Lógica del Chat ---
-            function toggleChat() {
-                const chat = document.getElementById('chat-window-container');
-                chat.style.display = (chat.style.display === 'none' || chat.style.display === '') ? 'flex' : 'none';
-            }
+    <!-- Canvas oculto para procesamiento -->
+    <canvas id="scanner-canvas" style="display:none;"></canvas>
 
-            async function sendChatMessage() {
-                const input = document.getElementById('chat-input');
-                const msgContainer = document.getElementById('chat-messages');
-                const sendBtn = input.nextElementSibling;
-                if (!input.value || sendBtn.disabled) return;
-                const p1 = "hf_PWtKjigimNuAeYk"; 
-                const p2 = "RUnfOEzeWXAxHzReemD";
-                const HF_TOKEN = p1 + p2; 
-                const MODEL_URL = "https://api-inference.huggingface.co/models/MistralAI/Mistral-7B-Instruct-v0.2";
-                const userText = input.value;
-                input.value = '';
-                sendBtn.disabled = true;
-                msgContainer.innerHTML += `<div style="background: #ff0000; color: white; padding: 10px; border-radius: 8px; align-self: flex-end; margin-bottom:5px;">${userText}</div>`;
-                const loadingId = 'loading-' + Date.now();
-                msgContainer.innerHTML += `<div id="${loadingId}" style="font-style: italic; font-size: 0.8rem; color: #8899a6; margin-bottom:10px;">BAMX IA analizando...</div>`;
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        // --- Lógica del Chat ---
+        function toggleChat() {
+            const chat = document.getElementById('chat-window-container');
+            chat.style.display = (chat.style.display === 'none' || chat.style.display === '') ? 'flex' : 'none';
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const msgContainer = document.getElementById('chat-messages');
+            const sendBtn = input.nextElementSibling;
+            if (!input.value || sendBtn.disabled) return;
+            const p1 = "hf_PWtKjigimNuAeYk";
+            const p2 = "RUnfOEzeWXAxHzReemD";
+            const HF_TOKEN = p1 + p2;
+            const MODEL_URL = "https://api-inference.huggingface.co/models/MistralAI/Mistral-7B-Instruct-v0.2";
+            const userText = input.value;
+            input.value = '';
+            sendBtn.disabled = true;
+            msgContainer.innerHTML += `<div style="background: #ff0000; color: white; padding: 10px; border-radius: 8px; align-self: flex-end; margin-bottom:5px;">${userText}</div>`;
+            const loadingId = 'loading-' + Date.now();
+            msgContainer.innerHTML += `<div id="${loadingId}" style="font-style: italic; font-size: 0.8rem; color: #8899a6; margin-bottom:10px;">BAMX IA analizando...</div>`;
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+            try {
+                const response = await fetch(MODEL_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + HF_TOKEN.trim() },
+                    body: JSON.stringify({
+                        inputs: `[INST] Eres el soporte técnico de BAMX. Responde breve y solo sobre tecnología. Pregunta: ${userText} [/INST]`,
+                        options: { wait_for_model: true }
+                    })
+                });
+                const data = await response.json();
+                const loadingElement = document.getElementById(loadingId);
+                if (loadingElement) loadingElement.remove();
+                let reply = data[0]?.generated_text || "Servicio cargando, intenta en 10 segundos.";
+                if (reply.includes('[/INST]')) reply = reply.split('[/INST]').pop().trim();
+                msgContainer.innerHTML += `<div style="background: #334155; padding: 10px; border-radius: 8px; align-self: flex-start; border-left: 3px solid #ff0000; margin-bottom:5px;">${reply}</div>`;
+            } catch (e) {
+                if (document.getElementById(loadingId)) document.getElementById(loadingId).innerText = "Error: Conexión rechazada.";
+            } finally {
+                sendBtn.disabled = false;
                 msgContainer.scrollTop = msgContainer.scrollHeight;
-                try {
-                    const response = await fetch(MODEL_URL, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + HF_TOKEN.trim() },
-                        body: JSON.stringify({
-                            inputs: `[INST] Eres el soporte técnico de BAMX. Responde breve y solo sobre tecnología. Pregunta: ${userText} [/INST]`,
-                            options: { wait_for_model: true } 
-                        })
-                    });
-                    const data = await response.json();
-                    const loadingElement = document.getElementById(loadingId);
-                    if (loadingElement) loadingElement.remove();
-                    let reply = data[0]?.generated_text || "Servicio cargando, intenta en 10 segundos.";
-                    if (reply.includes('[/INST]')) reply = reply.split('[/INST]').pop().trim();
-                    msgContainer.innerHTML += `<div style="background: #334155; padding: 10px; border-radius: 8px; align-self: flex-start; border-left: 3px solid #ff0000; margin-bottom:5px;">${reply}</div>`;
-                } catch (e) {
-                    if (document.getElementById(loadingId)) document.getElementById(loadingId).innerText = "Error: Conexión rechazada.";
-                } finally {
-                    sendBtn.disabled = false;
-                    msgContainer.scrollTop = msgContainer.scrollHeight;
-                }
             }
+        }
 
-            // --- Lógica del Escáner ---
-            let capturedPages = [];
-            let currentStream = null;
-            let useFrontCamera = false;
-            let scanMode = 'bw';
-            let digitalSignature = null; // Almacena la firma como DataURL
+        // --- Lógica del Escáner ---
+        let capturedPages = [];
+        let currentStream = null;
+        let useFrontCamera = false;
+        let scanMode = 'bw';
+        let digitalSignature = null; // Almacena la firma como DataURL
 
-            // --- Lógica de Firma (Opción 1) ---
-            const sigCanvas = document.getElementById('signature-pad');
-            const sigCtx = sigCanvas.getContext('2d');
-            let isDrawing = false;
+        // --- Lógica de Firma (Opción 1) ---
+        const sigCanvas = document.getElementById('signature-pad');
+        const sigCtx = sigCanvas.getContext('2d');
+        let isDrawing = false;
 
-            function openSignatureModal() {
-                document.getElementById('signature-modal').style.display = 'flex';
-                // Ajustar resolución del canvas
-                sigCanvas.width = sigCanvas.offsetWidth;
-                sigCanvas.height = sigCanvas.offsetHeight;
-                sigCtx.strokeStyle = "#000";
-                sigCtx.lineWidth = 3;
-                sigCtx.lineCap = "round";
-            }
+        function openSignatureModal() {
+            document.getElementById('signature-modal').style.display = 'flex';
+            // Ajustar resolución del canvas
+            sigCanvas.width = sigCanvas.offsetWidth;
+            sigCanvas.height = sigCanvas.offsetHeight;
+            sigCtx.strokeStyle = "#000";
+            sigCtx.lineWidth = 3;
+            sigCtx.lineCap = "round";
+        }
 
-            function closeSignatureModal() {
-                document.getElementById('signature-modal').style.display = 'none';
-            }
+        function closeSignatureModal() {
+            document.getElementById('signature-modal').style.display = 'none';
+        }
 
-            function clearSignature() {
-                sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
-            }
+        function clearSignature() {
+            sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+        }
 
-            function saveSignature() {
-                digitalSignature = sigCanvas.toDataURL();
-                alert("Firma guardada correctamente. Se añadirá al PDF.");
-                closeSignatureModal();
-            }
+        function saveSignature() {
+            digitalSignature = sigCanvas.toDataURL();
+            alert("Firma guardada correctamente. Se añadirá al PDF.");
+            closeSignatureModal();
+        }
 
-            // Eventos de dibujo
-            sigCanvas.onmousedown = (e) => { isDrawing = true; sigCtx.beginPath(); sigCtx.moveTo(e.offsetX, e.offsetY); };
-            sigCanvas.onmousemove = (e) => { if(isDrawing) { sigCtx.lineTo(e.offsetX, e.offsetY); sigCtx.stroke(); } };
-            sigCanvas.onmouseup = () => { isDrawing = false; };
-            // Touch
-            sigCanvas.ontouchstart = (e) => { 
-                e.preventDefault();
-                isDrawing = true; 
+        // Eventos de dibujo
+        sigCanvas.onmousedown = (e) => { isDrawing = true; sigCtx.beginPath(); sigCtx.moveTo(e.offsetX, e.offsetY); };
+        sigCanvas.onmousemove = (e) => { if (isDrawing) { sigCtx.lineTo(e.offsetX, e.offsetY); sigCtx.stroke(); } };
+        sigCanvas.onmouseup = () => { isDrawing = false; };
+        // Touch
+        sigCanvas.ontouchstart = (e) => {
+            e.preventDefault();
+            isDrawing = true;
+            const rect = sigCanvas.getBoundingClientRect();
+            sigCtx.beginPath();
+            sigCtx.moveTo(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+        };
+        sigCanvas.ontouchmove = (e) => {
+            if (isDrawing) {
                 const rect = sigCanvas.getBoundingClientRect();
-                sigCtx.beginPath(); 
-                sigCtx.moveTo(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top); 
+                sigCtx.lineTo(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+                sigCtx.stroke();
+            }
+        };
+        sigCanvas.ontouchend = () => { isDrawing = false; };
+
+        function setScanMode(mode) {
+            scanMode = mode;
+            const bwBtn = document.getElementById('mode-bw');
+            const colorBtn = document.getElementById('mode-color');
+
+            if (mode === 'bw') {
+                bwBtn.style.background = '#ff0000';
+                bwBtn.style.color = 'white';
+                colorBtn.style.background = 'transparent';
+                colorBtn.style.color = '#888';
+            } else {
+                colorBtn.style.background = '#ff0000';
+                colorBtn.style.color = 'white';
+                bwBtn.style.background = 'transparent';
+                bwBtn.style.color = '#888';
+            }
+        }
+
+        function openScanner() {
+            document.getElementById('main-tools').style.display = 'none';
+            document.getElementById('scanner-section').style.display = 'block';
+            startCamera();
+        }
+
+        function closeScanner() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById('scanner-section').style.display = 'none';
+            document.getElementById('main-tools').style.display = 'flex';
+        }
+
+        async function startCamera() {
+            if (currentStream) currentStream.getTracks().forEach(track => track.stop());
+            const constraints = {
+                video: {
+                    facingMode: useFrontCamera ? 'user' : 'environment',
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 },
+                    advanced: [{ focusMode: 'continuous' }]
+                }
             };
-            sigCanvas.ontouchmove = (e) => { 
-                if(isDrawing) { 
-                    const rect = sigCanvas.getBoundingClientRect();
-                    sigCtx.lineTo(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top); 
-                    sigCtx.stroke(); 
-                } 
-            };
-            sigCanvas.ontouchend = () => { isDrawing = false; };
-
-            function setScanMode(mode) {
-                scanMode = mode;
-                const bwBtn = document.getElementById('mode-bw');
-                const colorBtn = document.getElementById('mode-color');
-                
-                if (mode === 'bw') {
-                    bwBtn.style.background = '#ff0000';
-                    bwBtn.style.color = 'white';
-                    colorBtn.style.background = 'transparent';
-                    colorBtn.style.color = '#888';
-                } else {
-                    colorBtn.style.background = '#ff0000';
-                    colorBtn.style.color = 'white';
-                    bwBtn.style.background = 'transparent';
-                    bwBtn.style.color = '#888';
+            try {
+                currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+                document.getElementById('video').srcObject = currentStream;
+            } catch (err) {
+                console.error("Error cámara:", err);
+                if (constraints.video.advanced) {
+                    delete constraints.video.advanced;
+                    startCamera();
                 }
             }
+        }
 
-            function openScanner() {
-                document.getElementById('main-tools').style.display = 'none';
-                document.getElementById('scanner-section').style.display = 'block';
-                startCamera();
+        document.getElementById('capture-btn').onclick = () => {
+            const v = document.getElementById('video');
+            const c = document.getElementById('scanner-canvas');
+            c.width = v.videoWidth;
+            c.height = v.videoHeight;
+            const ctx = c.getContext('2d');
+            ctx.drawImage(v, 0, 0);
+
+            if (scanMode === 'bw') {
+                // Filtro de Escaneo Profesional de Alto Contraste
+                const imgData = ctx.getImageData(0, 0, c.width, c.height);
+                const data = imgData.data;
+
+                let totalLuma = 0;
+                for (let i = 0; i < data.length; i += 4) {
+                    totalLuma += 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+                }
+                const avgLuma = totalLuma / (data.length / 4);
+                const threshold = avgLuma * 0.92;
+
+                for (let i = 0; i < data.length; i += 4) {
+                    const luma = 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
+                    const val = luma > threshold ? 255 : (luma < threshold * 0.4 ? 0 : 40);
+                    data[i] = data[i + 1] = data[i + 2] = val;
+                }
+                ctx.putImageData(imgData, 0, 0);
             }
 
-            function closeScanner() {
-                if (currentStream) {
-                    currentStream.getTracks().forEach(track => track.stop());
-                }
-                document.getElementById('scanner-section').style.display = 'none';
-                document.getElementById('main-tools').style.display = 'flex';
-            }
+            const url = c.toDataURL('image/jpeg', 0.8);
+            capturedPages.push(url);
+            updateGallery();
+            document.getElementById('bulk-ocr-btn').style.display = capturedPages.length > 0 ? 'block' : 'none';
+        };
 
-            async function startCamera() {
-                if (currentStream) currentStream.getTracks().forEach(track => track.stop());
-                const constraints = {
-                    video: {
-                        facingMode: useFrontCamera ? 'user' : 'environment',
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 },
-                        advanced: [{ focusMode: 'continuous' }]
-                    }
-                };
-                try {
-                    currentStream = await navigator.mediaDevices.getUserMedia(constraints);
-                    document.getElementById('video').srcObject = currentStream;
-                } catch (err) {
-                    console.error("Error cámara:", err);
-                    if (constraints.video.advanced) {
-                        delete constraints.video.advanced;
-                        startCamera();
-                    }
-                }
-            }
-
-            document.getElementById('capture-btn').onclick = () => {
-                const v = document.getElementById('video');
-                const c = document.getElementById('scanner-canvas');
-                c.width = v.videoWidth;
-                c.height = v.videoHeight;
-                const ctx = c.getContext('2d');
-                ctx.drawImage(v, 0, 0);
-                
-                if (scanMode === 'bw') {
-                    // Filtro de Escaneo Profesional de Alto Contraste
-                    const imgData = ctx.getImageData(0, 0, c.width, c.height);
-                    const data = imgData.data;
-                    
-                    let totalLuma = 0;
-                    for (let i = 0; i < data.length; i += 4) {
-                        totalLuma += 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-                    }
-                    const avgLuma = totalLuma / (data.length / 4);
-                    const threshold = avgLuma * 0.92;
-
-                    for (let i = 0; i < data.length; i += 4) {
-                        const luma = 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
-                        const val = luma > threshold ? 255 : (luma < threshold * 0.4 ? 0 : 40);
-                        data[i] = data[i+1] = data[i+2] = val;
-                    }
-                    ctx.putImageData(imgData, 0, 0);
-                }
-                
-                const url = c.toDataURL('image/jpeg', 0.8);
-                capturedPages.push(url);
-                updateGallery();
-                document.getElementById('bulk-ocr-btn').style.display = capturedPages.length > 0 ? 'block' : 'none';
-            };
-
-            function updateGallery() {
-                const g = document.getElementById('gallery');
-                g.innerHTML = '';
-                capturedPages.forEach((p, i) => {
-                    const d = document.createElement('div');
-                    d.className = 'page-thumb';
-                    d.innerHTML = `
+        function updateGallery() {
+            const g = document.getElementById('gallery');
+            g.innerHTML = '';
+            capturedPages.forEach((p, i) => {
+                const d = document.createElement('div');
+                d.className = 'page-thumb';
+                d.innerHTML = `
                         <img src="${p}">
                         <button class="delete-page" onclick="removePage(${i})">×</button>
                         <button class="ocr-small-btn" onclick="extractText(${i})">IA TEXTO</button>
                     `;
-                    g.appendChild(d);
-                });
-                document.getElementById('generate-pdf-btn').disabled = capturedPages.length === 0;
-                document.getElementById('bulk-ocr-btn').style.display = capturedPages.length > 0 ? 'block' : 'none';
+                g.appendChild(d);
+            });
+            document.getElementById('generate-pdf-btn').disabled = capturedPages.length === 0;
+            document.getElementById('bulk-ocr-btn').style.display = capturedPages.length > 0 ? 'block' : 'none';
+        }
+
+        window.removePage = (i) => {
+            capturedPages.splice(i, 1);
+            updateGallery();
+        };
+
+        // --- OCR de Lote (Opción 5) ---
+        window.processBulkOCR = async () => {
+            const modal = document.getElementById('ocr-modal');
+            const result = document.getElementById('ocr-text-result');
+            const status = document.getElementById('ocr-status');
+            modal.style.display = 'flex';
+            result.value = '';
+            status.innerText = "IA Analizando todas las páginas...";
+
+            try {
+                const worker = await Tesseract.createWorker('spa');
+                let fullText = "";
+                for (let i = 0; i < capturedPages.length; i++) {
+                    status.innerText = `Analizando página ${i + 1} de ${capturedPages.length}...`;
+                    const { data: { text } } = await worker.recognize(capturedPages[i]);
+                    fullText += `--- PÁGINA ${i + 1} ---\n${text}\n\n`;
+                }
+                await worker.terminate();
+                result.value = fullText || "No se detectó texto.";
+                status.innerText = "Análisis de lote completado.";
+            } catch (e) {
+                status.innerText = "Error en el análisis de lote.";
+            }
+        };
+
+        window.extractText = async (i) => {
+            const modal = document.getElementById('ocr-modal');
+            const result = document.getElementById('ocr-text-result');
+            const status = document.getElementById('ocr-status');
+            modal.style.display = 'flex';
+            result.value = '';
+            status.innerText = "IA Analizando documento...";
+
+            try {
+                const worker = await Tesseract.createWorker('spa');
+                const { data: { text } } = await worker.recognize(capturedPages[i]);
+                await worker.terminate();
+                result.value = text || "No se detectó texto.";
+                status.innerText = "Análisis completado.";
+            } catch (e) {
+                status.innerText = "Error en el análisis.";
+            }
+        };
+
+        document.getElementById('clear-all-btn').onclick = () => {
+            if (capturedPages.length === 0) return;
+            if (confirm("¿Eliminar todas las capturas?")) {
+                capturedPages = [];
+                digitalSignature = null;
+                updateGallery();
+            }
+        };
+
+        document.getElementById('generate-pdf-btn').onclick = () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const useWatermark = document.getElementById('watermark-toggle').checked;
+            const category = document.getElementById('doc-category').value;
+            const timestamp = new Date().toLocaleString('es-MX');
+
+            capturedPages.forEach((p, i) => {
+                if (i > 0) doc.addPage();
+                const props = doc.getImageProperties(p);
+                const w = doc.internal.pageSize.getWidth();
+                const h = (props.height * w) / props.width;
+                doc.addImage(p, 'JPEG', 0, 0, w, h);
+
+                // --- Marca de Agua (Opción 3) ---
+                if (useWatermark) {
+                    doc.setTextColor(180, 180, 180);
+                    doc.setFontSize(50);
+                    // Usar transparencia nativa de jsPDF si está disponible, o simplemente color tenue
+                    try {
+                        doc.saveGraphicsState();
+                        doc.setGState(new doc.GState({ opacity: 0.1 }));
+                        doc.text("BAMX PUEBLA", 105, 150, { angle: 45, align: 'center' });
+                        doc.restoreGraphicsState();
+                    } catch (e) {
+                        // Fallback si GState falla
+                        doc.text("BAMX PUEBLA", 105, 150, { angle: 45, align: 'center' });
+                    }
+
+                    doc.setFontSize(8);
+                    doc.setTextColor(100, 100, 100);
+                    doc.text(`Doc: ${category} | Fecha: ${timestamp} | BAMX Oficial`, 105, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+                }
+            });
+
+            // --- Firma Digital (Opción 1) ---
+            if (digitalSignature) {
+                doc.addPage();
+                doc.setFontSize(16);
+                doc.setTextColor(0, 0, 0);
+                doc.text("FIRMA DE CONFORMIDAD", 105, 50, { align: 'center' });
+                doc.addImage(digitalSignature, 'PNG', 55, 65, 100, 50);
+                doc.line(60, 115, 150, 115);
+                doc.setFontSize(10);
+                doc.text("Firma Digital del Colaborador", 105, 125, { align: 'center' });
+                doc.text(`ID Transacción: ${Date.now()}`, 105, 135, { align: 'center' });
             }
 
-            window.removePage = (i) => {
-                capturedPages.splice(i, 1);
-                updateGallery();
-            };
+            // Categorización Inteligente (Opción 4)
+            const dateStr = new Date().toISOString().slice(0, 10);
+            const filename = `BAMX_${category}_${dateStr}_${Math.floor(Math.random() * 1000)}.pdf`;
+            doc.save(filename);
+        };
 
-            // --- OCR de Lote (Opción 5) ---
-            window.processBulkOCR = async () => {
-                const modal = document.getElementById('ocr-modal');
-                const result = document.getElementById('ocr-text-result');
-                const status = document.getElementById('ocr-status');
-                modal.style.display = 'flex';
-                result.value = '';
-                status.innerText = "IA Analizando todas las páginas...";
-                
-                try {
-                    const worker = await Tesseract.createWorker('spa');
-                    let fullText = "";
-                    for(let i=0; i < capturedPages.length; i++) {
-                        status.innerText = `Analizando página ${i+1} de ${capturedPages.length}...`;
-                        const { data: { text } } = await worker.recognize(capturedPages[i]);
-                        fullText += `--- PÁGINA ${i+1} ---\n${text}\n\n`;
-                    }
-                    await worker.terminate();
-                    result.value = fullText || "No se detectó texto.";
-                    status.innerText = "Análisis de lote completado.";
-                } catch (e) {
-                    status.innerText = "Error en el análisis de lote.";
-                }
-            };
+        document.getElementById('switch-camera-btn').onclick = () => {
+            useFrontCamera = !useFrontCamera;
+            startCamera();
+        };
 
-            window.extractText = async (i) => {
-                const modal = document.getElementById('ocr-modal');
-                const result = document.getElementById('ocr-text-result');
-                const status = document.getElementById('ocr-status');
-                modal.style.display = 'flex';
-                result.value = '';
-                status.innerText = "IA Analizando documento...";
-                
-                try {
-                    const worker = await Tesseract.createWorker('spa');
-                    const { data: { text } } = await worker.recognize(capturedPages[i]);
-                    await worker.terminate();
-                    result.value = text || "No se detectó texto.";
-                    status.innerText = "Análisis completado.";
-                } catch (e) {
-                    status.innerText = "Error en el análisis.";
-                }
-            };
+        document.getElementById('copy-ocr-btn').onclick = () => {
+            const r = document.getElementById('ocr-text-result');
+            r.select();
+            document.execCommand('copy');
+            alert("Copiado al portapapeles");
+        };
+    </script>
+</body>
 
-            document.getElementById('clear-all-btn').onclick = () => {
-                if(capturedPages.length === 0) return;
-                if(confirm("¿Eliminar todas las capturas?")) {
-                    capturedPages = [];
-                    digitalSignature = null;
-                    updateGallery();
-                }
-            };
-
-            document.getElementById('generate-pdf-btn').onclick = () => {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                const useWatermark = document.getElementById('watermark-toggle').checked;
-                const category = document.getElementById('doc-category').value;
-                const timestamp = new Date().toLocaleString('es-MX');
-
-                capturedPages.forEach((p, i) => {
-                    if (i > 0) doc.addPage();
-                    const props = doc.getImageProperties(p);
-                    const w = doc.internal.pageSize.getWidth();
-                    const h = (props.height * w) / props.width;
-                    doc.addImage(p, 'JPEG', 0, 0, w, h);
-
-                    // --- Marca de Agua (Opción 3) ---
-                    if (useWatermark) {
-                        doc.setTextColor(180, 180, 180);
-                        doc.setFontSize(50);
-                        // Usar transparencia nativa de jsPDF si está disponible, o simplemente color tenue
-                        try {
-                            doc.saveGraphicsState();
-                            doc.setGState(new doc.GState({opacity: 0.1}));
-                            doc.text("BAMX PUEBLA", 105, 150, { angle: 45, align: 'center' });
-                            doc.restoreGraphicsState();
-                        } catch(e) {
-                            // Fallback si GState falla
-                            doc.text("BAMX PUEBLA", 105, 150, { angle: 45, align: 'center' });
-                        }
-                        
-                        doc.setFontSize(8);
-                        doc.setTextColor(100, 100, 100);
-                        doc.text(`Doc: ${category} | Fecha: ${timestamp} | BAMX Oficial`, 105, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
-                    }
-                });
-
-                // --- Firma Digital (Opción 1) ---
-                if (digitalSignature) {
-                    doc.addPage();
-                    doc.setFontSize(16);
-                    doc.setTextColor(0, 0, 0);
-                    doc.text("FIRMA DE CONFORMIDAD", 105, 50, { align: 'center' });
-                    doc.addImage(digitalSignature, 'PNG', 55, 65, 100, 50);
-                    doc.line(60, 115, 150, 115);
-                    doc.setFontSize(10);
-                    doc.text("Firma Digital del Colaborador", 105, 125, { align: 'center' });
-                    doc.text(`ID Transacción: ${Date.now()}`, 105, 135, { align: 'center' });
-                }
-
-                // Categorización Inteligente (Opción 4)
-                const dateStr = new Date().toISOString().slice(0,10);
-                const filename = `BAMX_${category}_${dateStr}_${Math.floor(Math.random()*1000)}.pdf`;
-                doc.save(filename);
-            };
-
-            document.getElementById('switch-camera-btn').onclick = () => {
-                useFrontCamera = !useFrontCamera;
-                startCamera();
-            };
-
-            document.getElementById('copy-ocr-btn').onclick = () => {
-                const r = document.getElementById('ocr-text-result');
-                r.select();
-                document.execCommand('copy');
-                alert("Copiado al portapapeles");
-            };
-        </script>
-	</body>
 </html>
