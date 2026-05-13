@@ -285,6 +285,11 @@
                         <button onclick="closeScanner()" class="close-scanner-btn">&times;</button>
                     </div>
                     
+                    <div id="mode-selector" style="display: flex; background: rgba(255, 255, 255, 0.05); padding: 5px; border-radius: 12px; margin-bottom: 1.5rem; gap: 5px;">
+                        <button id="mode-bw" class="mode-btn active" onclick="setScanMode('bw')" style="flex: 1; border: none; background: #ff0000; color: white; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s;">📄 B/N</button>
+                        <button id="mode-color" class="mode-btn" onclick="setScanMode('color')" style="flex: 1; border: none; background: transparent; color: #888; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s;">🎨 COLOR</button>
+                    </div>
+
                     <div class="camera-viewport">
                         <video id="video" autoplay playsinline></video>
                         <div class="scan-guide">
@@ -400,6 +405,25 @@
             let capturedPages = [];
             let currentStream = null;
             let useFrontCamera = false;
+            let scanMode = 'bw';
+
+            function setScanMode(mode) {
+                scanMode = mode;
+                const bwBtn = document.getElementById('mode-bw');
+                const colorBtn = document.getElementById('mode-color');
+                
+                if (mode === 'bw') {
+                    bwBtn.style.background = '#ff0000';
+                    bwBtn.style.color = 'white';
+                    colorBtn.style.background = 'transparent';
+                    colorBtn.style.color = '#888';
+                } else {
+                    colorBtn.style.background = '#ff0000';
+                    colorBtn.style.color = 'white';
+                    bwBtn.style.background = 'transparent';
+                    bwBtn.style.color = '#888';
+                }
+            }
 
             function openScanner() {
                 document.getElementById('main-tools').style.display = 'none';
@@ -445,15 +469,25 @@
                 const ctx = c.getContext('2d');
                 ctx.drawImage(v, 0, 0);
                 
-                // Filtro OCR/Escáner
-                const imgData = ctx.getImageData(0,0,c.width,c.height);
-                const data = imgData.data;
-                for(let i=0; i<data.length; i+=4) {
-                    const avg = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
-                    const val = avg > 128 ? 255 : 0;
-                    data[i] = data[i+1] = data[i+2] = val;
+                if (scanMode === 'bw') {
+                    // Filtro de Escaneo Profesional de Alto Contraste
+                    const imgData = ctx.getImageData(0, 0, c.width, c.height);
+                    const data = imgData.data;
+                    
+                    let totalLuma = 0;
+                    for (let i = 0; i < data.length; i += 4) {
+                        totalLuma += 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+                    }
+                    const avgLuma = totalLuma / (data.length / 4);
+                    const threshold = avgLuma * 0.92;
+
+                    for (let i = 0; i < data.length; i += 4) {
+                        const luma = 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
+                        const val = luma > threshold ? 255 : (luma < threshold * 0.4 ? 0 : 40);
+                        data[i] = data[i+1] = data[i+2] = val;
+                    }
+                    ctx.putImageData(imgData, 0, 0);
                 }
-                ctx.putImageData(imgData, 0, 0);
                 
                 const url = c.toDataURL('image/jpeg', 0.8);
                 capturedPages.push(url);
