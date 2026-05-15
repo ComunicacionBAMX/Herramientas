@@ -18,6 +18,10 @@
 
     <style>
         /* Tu estilo original se mantiene intacto */
+        * {
+            box-sizing: border-box;
+        }
+
         #bg {
             background-image: url("fondo2.png") !important;
             background-size: cover !important;
@@ -228,7 +232,8 @@
             background: linear-gradient(135deg, #ff1f1f, #d40000);
             color: white;
             border: none;
-            padding: 0.9rem 2rem;
+            height: 55px;
+            padding: 0 2rem;
             border-radius: 12px;
             font-weight: 600;
             font-size: 0.95rem;
@@ -241,8 +246,7 @@
             gap: 0.8rem;
             box-shadow: 0 4px 15px rgba(212, 0, 0, 0.3);
             text-transform: uppercase;
-            max-width: 280px;
-            margin: 0 auto;
+            max-width: 250px;
         }
 
         .btn-red:hover {
@@ -257,6 +261,7 @@
 
         .btn-outline {
             width: 70px;
+            height: 55px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #fff;
@@ -312,7 +317,8 @@
             background: rgba(255, 255, 255, 0.05);
             color: #ffffff;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 0.9rem 2rem;
+            height: 55px;
+            padding: 0 2rem;
             border-radius: 12px;
             font-weight: 600;
             font-size: 0.95rem;
@@ -321,8 +327,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 1;
             text-transform: uppercase;
-            max-width: 280px;
-            margin: 0 auto;
+            max-width: 250px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -703,6 +708,11 @@
             justify-content: center;
             align-items: center;
         }
+
+        #qrcode canvas {
+            width: 300px !important;
+            height: 300px !important;
+        }
     </style>
 </head>
 
@@ -814,7 +824,7 @@
                 <div id="qrcode"></div>
             </div>
 
-            <div class="scanner-controls" style="margin-top: 1.5rem;">
+            <div class="scanner-controls" style="margin-top: 1.5rem; justify-content: center;">
                 <button onclick="generarQR()" class="btn-red">⚡ GENERAR</button>
                 <button id="download-qr-btn" onclick="descargarQR()" class="btn-save" style="display:none;">DESCARGAR PNG</button>
             </div>
@@ -1222,8 +1232,8 @@
             qrContainer.innerHTML = '';
 
             qrCode = new QRCodeStyling({
-                width: 300,
-                height: 300,
+                width: 600, // Duplicamos resolución para que no se vea borroso al hacer zoom
+                height: 600,
                 type: "canvas", // Cambiado a canvas para mejor compatibilidad con logos al escalar
                 data: text,
                 image: qrLogoData,
